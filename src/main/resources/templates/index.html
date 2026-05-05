@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Todoアプリ</title>
+</head>
+<body>
+    <h1>Todoリスト</h1>
+    <input type="text" id="title" placeholder="やることを入力">
+    <button onclick="addTodo()">追加</button>
+    <ul id="list"></ul>
+
+    <script>
+        async function loadTodos() {
+            const res = await fetch('/todos');
+            const todos = await res.json();
+            const list = document.getElementById('list');
+            list.innerHTML = '';
+            todos.forEach(todo => {
+                const li = document.createElement('li');
+                li.textContent = todo.title;
+                list.appendChild(li);
+            });
+        }
+
+        async function addTodo() {
+            const title = document.getElementById('title').value;
+            await fetch('/todos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title })
+            });
+            loadTodos();
+        }
+
+        loadTodos();
+    </script>
+</body>
+</html>
