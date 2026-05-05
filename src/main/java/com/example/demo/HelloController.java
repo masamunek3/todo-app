@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
 
 @RestController
 public class HelloController {
@@ -15,7 +15,7 @@ public class HelloController {
     @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<String> index() throws IOException {
         var resource = new ClassPathResource("templates/index.html");
-        String html = Files.readString(resource.getFile().toPath());
+        String html = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
         return ResponseEntity.ok(html);
     }
 }
