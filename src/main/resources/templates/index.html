@@ -3,11 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Todoアプリ</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; background: #f5f5f5; }
+        h1 { color: #333; }
+        .input-area { display: flex; gap: 8px; margin-bottom: 20px; }
+        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
+        button { padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #45a049; }
+        ul { list-style: none; padding: 0; }
+        li { background: white; padding: 14px; margin-bottom: 8px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    </style>
 </head>
 <body>
-    <h1>Todoリスト</h1>
-    <input type="text" id="title" placeholder="やることを入力">
-    <button onclick="addTodo()">追加</button>
+    <h1>📝 Todoリスト</h1>
+    <div class="input-area">
+        <input type="text" id="title" placeholder="やることを入力...">
+        <button onclick="addTodo()">追加</button>
+    </div>
     <ul id="list"></ul>
 
     <script>
@@ -25,13 +37,19 @@
 
         async function addTodo() {
             const title = document.getElementById('title').value;
+            if (!title) return;
             await fetch('/todos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ title })
             });
+            document.getElementById('title').value = '';
             loadTodos();
         }
+
+        document.getElementById('title').addEventListener('keypress', e => {
+            if (e.key === 'Enter') addTodo();
+        });
 
         loadTodos();
     </script>
